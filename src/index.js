@@ -1,32 +1,42 @@
 import SimpleLightbox from 'simplelightbox';
-import "simplelightbox/dist/simple-lightbox.min.css";
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import Axios from 'axios';
 
 const gallery = document.querySelector(`.gallery`);
 const form = document.querySelector(`.search-form`);
+const loadMoreBtn = document.querySelector(`.load-more`);
+
+let page = 1;
+loadMoreBtn.style.display = `none`;
+
 form.addEventListener(`submit`, onSearchForm);
 gallery.addEventListener(`click`, onPictureClick);
+loadMoreBtn.addEventListener(`click`, loadMoreItems);
+let name = ``;
 
 function onSearchForm(event) {
+  cleanPage();
   event.preventDefault();
-  // let searchQuery = null;
-  const searchQuery = event.currentTarget.elements.searchQuery.value;
-  console.log(searchQuery);
-  fetchUrl(searchQuery);
+  name = event.currentTarget.elements.searchQuery.value;
+  fetchUrl(name, page);
 }
 
-function fetchUrl(searchRequest) {
+function fetchUrl(searchRequest, page = 1) {
   const KEY = `29526037-011b39b59387f2f37ea2d4748`;
+  const URL = `https://pixabay.com/api/?key=${KEY}&q=${searchRequest}&image_type=photo&safesearch=true&orientation=horizontal&page=${page}&per_page=40`;
 
-  const URL = `https://pixabay.com/api/?key=${KEY}&q=${searchRequest}&image_type=photo&safesearch=true&orientation=horizontal&page=1&per_page=40`;
+  const arrOfItems = Axios.get(`${URL}`).then(obj => {
+    if (obj.data.hits.length > 0) {
+      loadMoreBtn.style.display = `block`;
+    }
 
-  const arrOfItems = fetch(`${URL}`)
-    .then(res => res.json())
-    .then(data => renderMarkUp(data));
+    renderMarkUp(obj.data);
+  });
+
+  return arrOfItems;
 }
 
 function renderMarkUp(arr) {
-  console.log(arr);
-
   const markUp = arr.hits.reduce((acc, hits) => {
     return (acc += `
     <div class="gallery__item" >
@@ -52,7 +62,26 @@ function renderMarkUp(arr) {
     `);
   }, ``);
 
-  gallery.innerHTML = markUp;
+  gallery.insertAdjacentHTML(`beforeend`, markUp);
+  console.log(arr);
+  console.log(gallery.children.length);
+  console.log(arr.totalHits);
+
+  if (
+    gallery.children.length === arr.totalHits ||
+    gallery.children.length === 500
+  ) {
+    loadMoreBtn.style.display = `none`;
+  }
+}
+
+function loadMoreItems() {
+  fetchUrl(name, (page += 1)).then(renderMarkUp);
+}
+
+function cleanPage() {
+  gallery.innerHTML = ``;
+  page = 1;
 }
 
 function onPictureClick(event) {
@@ -61,7 +90,7 @@ function onPictureClick(event) {
   if (event.target.nodeName !== 'IMG') {
     return;
   }
-console.log(`+`);
+  console.log(`+`);
 
   let bigPictures = new SimpleLightbox(`.gallery a`, {
     captionType: 'attr',

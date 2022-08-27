@@ -1,7 +1,7 @@
 .gallery {
     display: grid;
-    max-width: 1000px;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    max-width: 1200px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     // grid-auto-rows: 240px;
     grid-gap: 12px;
     justify-content: center;
@@ -12,15 +12,15 @@
   }
 
   .gallery__item {
-    width: 320px;
+    width: 240px;
     position: relative;
   }
 
   .gallery__img{
-    width: 320px;
+    width: 240px;
   }
 
-  .search-form {
+  .search-form{
     margin-bottom: 30px;
     display: block;
     text-align: center
