@@ -30,11 +30,6 @@ function fetchUrl(searchRequest, page = 1) {
   const arrOfItems = Axios.get(`${URL}`).then(obj => {
     console.log(obj.data.totalHits);
 
-    if (obj.data.hits.length > 0) {
-      setTimeout(() => {
-        loadMoreBtn.style.display = `block`;
-      }, 500);
-    }
     if (obj.data.hits.length === 0) {
       Notiflix.Notify.failure(
         `Sorry, there are no images matching your search query. Please try again.`
@@ -68,7 +63,13 @@ function renderMarkUp(arr) {
   gallery.insertAdjacentHTML(`beforeend`, markUp);
 
   console.log(`+`, gallery.children.length);
-  console.log(arr.totalHits);
+  console.log(arr);
+
+  if (arr.hits.length > 0) {
+    setTimeout(() => {
+      loadMoreBtn.style.display = `block`;
+    }, 500);
+  }
 
   if (
     (gallery.children.length === arr.totalHits ||
