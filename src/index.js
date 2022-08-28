@@ -25,7 +25,7 @@ function onSearchForm(event) {
 function fetchUrl(searchRequest, page = 1) {
   const KEY = `29526037-011b39b59387f2f37ea2d4748`;
   const URL = `https://pixabay.com/api/?key=${KEY}&q=${searchRequest}&image_type=photo&safesearch=true&orientation=horizontal&page=${page}&per_page=4`;
-//   console.log(obj.data.hits.length);
+  //   console.log(obj.data.hits.length);
 
   const arrOfItems = Axios.get(`${URL}`).then(obj => {
     console.log(obj.data.totalHits);
@@ -67,21 +67,20 @@ function renderMarkUp(arr) {
 
   gallery.insertAdjacentHTML(`beforeend`, markUp);
 
-
-
   console.log(`+`, gallery.children.length);
   console.log(arr.totalHits);
 
-    if (
-      (gallery.children.length === arr.totalHits ||
-      gallery.children.length === 500) && gallery.children.length!=0
-    ) {
-      console.log(`Кінець колекції, кнопка має заховатися!`)
-      loadMoreBtn.style.display=`none`;
-      Notiflix.Notify.info(
-        "We're sorry, but you've reached the end of search results."
-      );
-    }
+  if (
+    (gallery.children.length === arr.totalHits ||
+      gallery.children.length === 500) &&
+    gallery.children.length != 0
+  ) {
+    console.log(`Кінець колекції, кнопка має заховатися!`);
+    loadMoreBtn.style.display = `none`;
+    Notiflix.Notify.info(
+      "We're sorry, but you've reached the end of search results."
+    );
+  }
 }
 
 function loadMoreItems() {
