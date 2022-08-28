@@ -1,6 +1,7 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Axios from 'axios';
+import Notiflix from 'notiflix';
 
 const gallery = document.querySelector(`.gallery`);
 const form = document.querySelector(`.search-form`);
@@ -27,7 +28,14 @@ function fetchUrl(searchRequest, page = 1) {
 
   const arrOfItems = Axios.get(`${URL}`).then(obj => {
     if (obj.data.hits.length > 0) {
-      loadMoreBtn.style.display = `block`;
+      setTimeout(() => {
+        loadMoreBtn.style.display = `block`;
+      }, 500);
+    }
+    if (obj.data.hits.length === 0) {
+      Notiflix.Notify.failure(
+        `Sorry, there are no images matching your search query. Please try again.`
+      );
     }
 
     renderMarkUp(obj.data);
@@ -63,15 +71,18 @@ function renderMarkUp(arr) {
   }, ``);
 
   gallery.insertAdjacentHTML(`beforeend`, markUp);
-  console.log(arr);
+
   console.log(gallery.children.length);
   console.log(arr.totalHits);
 
   if (
     gallery.children.length === arr.totalHits ||
-    gallery.children.length === 500
-  ) {
+    gallery.children.length === 520  ) {
+    console.log(`+`);
     loadMoreBtn.style.display = `none`;
+    Notiflix.Notify.info(
+      "We're sorry, but you've reached the end of search results."
+    );
   }
 }
 
@@ -80,6 +91,7 @@ function loadMoreItems() {
 }
 
 function cleanPage() {
+  loadMoreBtn.style.display = `none`;
   gallery.innerHTML = ``;
   page = 1;
 }
