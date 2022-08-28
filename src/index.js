@@ -7,33 +7,44 @@ const gallery = document.querySelector(`.gallery`);
 const form = document.querySelector(`.search-form`);
 const loadMoreBtn = document.querySelector(`.load-more`);
 
-let page = 1;
-loadMoreBtn.style.display = `none`;
-
 form.addEventListener(`submit`, onSearchForm);
 gallery.addEventListener(`click`, onPictureClick);
 loadMoreBtn.addEventListener(`click`, loadMoreItems);
-let name = ``;
 
+let page = 1;
+let name = ``;
+loadMoreBtn.style.display = `none`;
+
+// Пошук елементів по запиту в інпуті
 function onSearchForm(event) {
   cleanPage();
   event.preventDefault();
-  name = event.currentTarget.elements.searchQuery.value;
-  if(!name){
-    Notiflix.Notify.warning(`Please choose the animal`)
-  }
-  else{
+  name = event.currentTarget.elements.searchQuery.value.trim();
+
+  if (!name) {
+    Notiflix.Notify.warning(`Please choose the animal`);
+  } else {
     fetchUrl(name, page);
   }
-  
 }
 
+// Робота с backend 
 async function fetchUrl(searchRequest, page = 1) {
   try {
     const KEY = `29526037-011b39b59387f2f37ea2d4748`;
-    const URL = `https://pixabay.com/api/?key=${KEY}&q=${searchRequest}&image_type=photo&safesearch=true&orientation=horizontal&page=${page}&per_page=40`;
+    const URL = `https://pixabay.com/api/`;
 
-    const arrOfItems = await Axios.get(`${URL}`);
+    const arrOfItems = await Axios.get(`${URL}`, {
+      params: {
+        key: `${KEY}`,
+        q: `${searchRequest}`,
+        image_type: `photo`,
+        safesearch: `true`,
+        orientation: `horizontal`,
+        page: `${page}`,
+        per_pag: `40`,
+      },
+    });
 
     if (arrOfItems.data.totalHits > 0 && page === 1) {
       Notiflix.Notify.info(
@@ -49,12 +60,12 @@ async function fetchUrl(searchRequest, page = 1) {
 
     renderMarkUp(arrOfItems.data);
 
-    return arrOfItems;
   } catch (error) {
-    console.log(error);
+    Notiflix.Notify.warning(error);
   }
 }
 
+// Рендер розмітки та робота з Load more кнопкою 
 function renderMarkUp(arr) {
   const markUp = arr.hits.reduce((acc, hit) => {
     return (acc += `
@@ -87,16 +98,19 @@ function renderMarkUp(arr) {
   }
 }
 
+// Завантаження додаткових карточок
 function loadMoreItems() {
   fetchUrl(name, (page += 1));
 }
 
+// Очищення наповнення сторінки
 function cleanPage() {
   loadMoreBtn.style.display = `none`;
   gallery.innerHTML = ``;
   page = 1;
 }
 
+// Використання бібліотеки SimpleLightbox
 function onPictureClick(event) {
   event.preventDefault();
 
