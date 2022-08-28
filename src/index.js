@@ -27,7 +27,7 @@ function onSearchForm(event) {
 function fetchUrl(searchRequest, page = 1) {
   const KEY = `29526037-011b39b59387f2f37ea2d4748`;
   const URL = `https://pixabay.com/api/?key=${KEY}&q=${searchRequest}&image_type=photo&safesearch=true&orientation=horizontal&page=${page}&per_page=40`;
-  
+
   const arrOfItems = Axios.get(`${URL}`).then(obj => {
     console.log(obj);
 
@@ -67,17 +67,11 @@ function renderMarkUp(arr) {
   console.log(arr);
 
   if (arr.hits.length > 0) {
-      loadMoreBtn.style.display = `block`;
-    
+    loadMoreBtn.style.display = `block`;
   }
 
-  if (
-
-Math.floor(arr.totalHits / 40) < page
-  ) {
-    console.log(`Кінець колекції, кнопка має заховатися!`);
-    loadMoreBtn.style.display = "none";
-
+  if (Math.floor(arr.totalHits / 40) < page) {
+    loadMoreBtn.style.display = 'none';
     Notiflix.Notify.info(
       "We're sorry, but you've reached the end of search results."
     );
