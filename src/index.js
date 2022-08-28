@@ -24,7 +24,7 @@ function onSearchForm(event) {
 
 function fetchUrl(searchRequest, page = 1) {
   const KEY = `29526037-011b39b59387f2f37ea2d4748`;
-  const URL = `https://pixabay.com/api/?key=${KEY}&q=${searchRequest}&image_type=photo&safesearch=true&orientation=horizontal&page=${page}&per_page=4`;
+  const URL = `https://pixabay.com/api/?key=${KEY}&q=${searchRequest}&image_type=photo&safesearch=true&orientation=horizontal&page=${page}&per_page=40`;
   //   console.log(obj.data.hits.length);
 
   const arrOfItems = Axios.get(`${URL}`).then(obj => {
