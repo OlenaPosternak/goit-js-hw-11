@@ -77,8 +77,8 @@ function renderMarkUp(arr) {
 
   if (
     gallery.children.length === arr.totalHits ||
-    gallery.children.length === 520  ) {
-    console.log(`+`);
+    gallery.children.length === 500
+  ) {
     loadMoreBtn.style.display = `none`;
     Notiflix.Notify.info(
       "We're sorry, but you've reached the end of search results."
@@ -91,6 +91,7 @@ function loadMoreItems() {
 }
 
 function cleanPage() {
+  gallery.style.backgroundcolor = `#000`;
   loadMoreBtn.style.display = `none`;
   gallery.innerHTML = ``;
   page = 1;
