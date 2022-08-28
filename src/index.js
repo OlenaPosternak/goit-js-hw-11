@@ -19,7 +19,13 @@ function onSearchForm(event) {
   cleanPage();
   event.preventDefault();
   name = event.currentTarget.elements.searchQuery.value;
-  fetchUrl(name, page);
+  if(!name){
+    Notiflix.Notify.warning(`Please choose the animal`)
+  }
+  else{
+    fetchUrl(name, page);
+  }
+  
 }
 
 async function fetchUrl(searchRequest, page = 1) {
