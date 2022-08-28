@@ -42,9 +42,11 @@ async function fetchUrl(searchRequest, page = 1) {
         safesearch: `true`,
         orientation: `horizontal`,
         page: `${page}`,
-        per_pag: `40`,
+        per_page: 40,
       },
     });
+
+    console.log(arrOfItems);
 
     if (arrOfItems.data.totalHits > 0 && page === 1) {
       Notiflix.Notify.info(
@@ -89,8 +91,8 @@ function renderMarkUp(arr) {
   if (arr.hits.length > 0) {
     loadMoreBtn.style.display = `block`;
   }
-
-  if (Math.floor(arr.totalHits / 40) < page) {
+console.log(arr.hits);
+  if ((Math.floor(arr.totalHits / 40) < page) && arr.hits.length !=0) {
     loadMoreBtn.style.display = 'none';
     Notiflix.Notify.info(
       "We're sorry, but you've reached the end of search results."
