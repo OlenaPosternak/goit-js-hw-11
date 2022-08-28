@@ -7,6 +7,8 @@ const gallery = document.querySelector(`.gallery`);
 const form = document.querySelector(`.search-form`);
 const loadMoreBtn = document.querySelector(`.load-more`);
 
+// const btnSection = document
+
 let page = 1;
 loadMoreBtn.style.display = `none`;
 
@@ -65,18 +67,17 @@ function renderMarkUp(arr) {
   console.log(arr);
 
   if (arr.hits.length > 0) {
-    setTimeout(() => {
       loadMoreBtn.style.display = `block`;
-    }, 500);
+    
   }
 
   if (
-    (gallery.children.length === arr.totalHits ||
-      gallery.children.length === 500) &&
-    gallery.children.length != 0
+
+Math.floor(arr.totalHits / 40) < page
   ) {
     console.log(`Кінець колекції, кнопка має заховатися!`);
-    loadMoreBtn.style.display = `none`;
+    loadMoreBtn.style.display = "none";
+
     Notiflix.Notify.info(
       "We're sorry, but you've reached the end of search results."
     );
